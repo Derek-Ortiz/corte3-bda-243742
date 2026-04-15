@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: clinica_vet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_VET_PASSWORD: ${APP_VET_PASSWORD}
+      APP_RECEP_PASSWORD: ${APP_RECEP_PASSWORD}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./schema_corte3.sql:/docker-entrypoint-initdb.d/00_schema.sql:ro
+      - ./backend/01_procedures.sql:/docker-entrypoint-initdb.d/01_procedures.sql:ro
+      - ./backend/02_triggers.sql:/docker-entrypoint-initdb.d/02_triggers.sql:ro
+      - ./backend/03_views.sql:/docker-entrypoint-initdb.d/03_views.sql:ro
+      - ./backend/04_roles_y_permisos.sql:/docker-entrypoint-initdb.d/04_roles_y_permisos.sql.tmpl:ro
+      - ./backend/05_rls.sql:/docker-entrypoint-initdb.d/05_rls.sql:ro
+      - ./docker/init/04_roles_y_permisos.sh:/docker-entrypoint-initdb.d/04_roles_y_permisos.sh:ro
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ./api
+    environment:
+      PORT: 4000
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: clinica_vet
+      DB_VET_USER: app_vet
+      DB_VET_PASSWORD: ${APP_VET_PASSWORD}
+      DB_RECEP_USER: app_recepcion
+      DB_RECEP_PASSWORD: ${APP_RECEP_PASSWORD}
+      DB_ADMIN_USER: app_admin
+      DB_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+      - redis
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
