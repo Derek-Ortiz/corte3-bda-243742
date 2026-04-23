@@ -1,4 +1,3 @@
--- Vista: mascotas con vacunas pendientes
 
 CREATE OR REPLACE VIEW v_mascotas_vacunacion_pendiente AS
 SELECT

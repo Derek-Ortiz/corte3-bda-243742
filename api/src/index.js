@@ -5,6 +5,24 @@ const { withDb } = require('./db');
 const { initRedis, getCache, setCache, deleteByPrefix } = require('./cache');
 
 const app = express();
+
+app.use((req, res, next) => {
+  const origin = req.header('origin');
+  if (origin && origin === config.frontendOrigin) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Vary', 'Origin');
+  }
+
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, x-role, x-vet-id');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 const roleSchema = z.enum(['vet', 'recepcion', 'admin']);
@@ -41,7 +59,7 @@ app.get('/mascotas', async (req, res, next) => {
   }
 
   const parsed = z
-    .object({ q: z.string().trim().max(50).optional() })
+    .object({ q: z.string().trim().max(120).optional() })
     .safeParse(req.query);
   if (!parsed.success) {
     return res.status(400).json({ error: 'Parametro q invalido' });

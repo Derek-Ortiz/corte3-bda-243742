@@ -1,4 +1,3 @@
--- Trigger: historial_movimientos cuando se inserta una cita
 
 CREATE OR REPLACE FUNCTION fn_historial_cita()
 RETURNS TRIGGER

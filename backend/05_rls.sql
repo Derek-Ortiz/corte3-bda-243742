@@ -1,4 +1,3 @@
--- Row-Level Security (RLS)
 
 ALTER TABLE mascotas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mascotas FORCE ROW LEVEL SECURITY;
@@ -9,7 +8,6 @@ ALTER TABLE citas FORCE ROW LEVEL SECURITY;
 ALTER TABLE vacunas_aplicadas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vacunas_aplicadas FORCE ROW LEVEL SECURITY;
 
--- Mascotas
 CREATE POLICY mascotas_admin_all
 ON mascotas
 FOR ALL
@@ -36,7 +34,6 @@ USING (
     )
 );
 
--- Citas
 CREATE POLICY citas_admin_all
 ON citas
 FOR ALL
@@ -90,7 +87,6 @@ WITH CHECK (
     )
 );
 
--- Vacunas aplicadas
 CREATE POLICY vacunas_admin_all
 ON vacunas_aplicadas
 FOR ALL

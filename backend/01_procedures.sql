@@ -1,4 +1,3 @@
--- Procedures and functions (Corte 2)
 
 CREATE OR REPLACE PROCEDURE sp_agendar_cita(
     p_mascota_id INT,

@@ -12,10 +12,11 @@ function required(name) {
 
 const config = {
   port: Number(process.env.PORT || 4000),
+  frontendOrigin: process.env.FRONTEND_ORIGIN,
   cacheTtlSeconds: Number(process.env.CACHE_TTL_SECONDS || 60),
   db: {
     host: required('DB_HOST'),
-    port: Number(process.env.DB_PORT || 5432),
+    port: Number(process.env.DB_PORT),
     name: required('DB_NAME'),
     vetUser: required('DB_VET_USER'),
     vetPassword: required('DB_VET_PASSWORD'),
