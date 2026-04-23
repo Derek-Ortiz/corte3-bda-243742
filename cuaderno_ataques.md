@@ -2,7 +2,6 @@
 
 Proyecto: Corte 3 BDA — Clinica Veterinaria  
 Fecha: 2026-04-22  
-Autor: Eva_corte3-BDA
 
 ---
 
